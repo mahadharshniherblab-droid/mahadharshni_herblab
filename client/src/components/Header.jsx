@@ -88,7 +88,7 @@ export default function Header() {
             onChange={(e) => setLang(e.target.value)}
             aria-label="Language"
           >
-            {languages.map((l) => <option key={l.code} value={l.code}>{l.label}</option>)}
+            {languages.map((l) => <option key={l.code} value={l.code}>{l.short}</option>)}
           </select>
 
           <ThemeToggle />

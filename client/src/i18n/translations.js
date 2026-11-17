@@ -2,10 +2,10 @@
 // Native speakers should review the Tamil, Telugu and Hindi text before launch.
 
 export const LANGUAGES = [
-  { code: 'en', label: 'English' },
-  { code: 'ta', label: 'தமிழ்' },
-  { code: 'te', label: 'తెలుగు' },
-  { code: 'hi', label: 'हिन्दी' }
+  { code: 'en', label: 'English', short: 'EN' },
+  { code: 'ta', label: 'தமிழ்', short: 'TAM' },
+  { code: 'te', label: 'తెలుగు', short: 'TEL' },
+  { code: 'hi', label: 'हिन्दी', short: 'HIN' }
 ];
 
 export const translations = {

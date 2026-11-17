@@ -26,6 +26,8 @@ export default function ProductCard({ id, index = 0 }) {
   const slideCount = video ? 2 : 1;
   const goTo = (i) => setSlide(Math.max(0, Math.min(slideCount - 1, i)));
   const onDragStart = (e) => {
+    // Nothing to swipe to (no video) - leave taps alone so the cover always opens the product.
+    if (slideCount <= 1) return;
     dragging.current = true;
     dragged.current = false;
     dragStartX.current = e.clientX;
@@ -34,7 +36,8 @@ export default function ProductCard({ id, index = 0 }) {
   const onDragMove = (e) => {
     if (!dragging.current) return;
     let dx = e.clientX - dragStartX.current;
-    if (Math.abs(dx) > 5) {
+    // A bit of tolerance so an ordinary tap isn't mistaken for the start of a swipe.
+    if (Math.abs(dx) > 12) {
       dragged.current = true;
       e.currentTarget.setPointerCapture?.(e.pointerId);
     }

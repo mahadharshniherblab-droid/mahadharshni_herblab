@@ -25,7 +25,7 @@ export default function SeasonalOffer() {
         <p className="seasonal__label">{t('seasonal.label')}</p>
         {offers.map((offer) => (
           <article key={offer.id ?? offer.image} className="seasonal__entry">
-            <h2 className="seasonal__title">{offer.title || t('seasonal.title')}</h2>
+            <h2 className="seasonal__title section__title">{offer.title || t('seasonal.title')}</h2>
             <div className="seasonal__card" data-reveal="zoom">
               <div className="seasonal__media">
                 <img src={offer.image} alt={offer.title || t('seasonal.title')} loading="lazy" />
@@ -41,7 +41,7 @@ export default function SeasonalOffer() {
           </article>
         ))}
         {!offers.length && <>
-          <h2 className="seasonal__title">{t('seasonal.title')}</h2>
+          <h2 className="seasonal__title section__title">{t('seasonal.title')}</h2>
           <p className="seasonal__intro">{t('seasonal.intro')}</p>
           <p className="seasonal__empty">{t('seasonal.empty')}</p>
         </>}

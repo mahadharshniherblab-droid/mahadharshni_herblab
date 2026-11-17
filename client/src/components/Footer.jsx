@@ -12,7 +12,13 @@ export default function Footer() {
       <div className="container">
         <div className="footer__inner">
           <div>
-            <Link to="/" className="footer__brand"><Logo size={54} alt="" /><strong>Mahadharshni Herblab</strong></Link>
+            <Link to="/" className="footer__brand">
+              <Logo size={54} alt="" />
+              <span className="footer__brand-text">
+                <strong>Mahadharshni</strong>
+                <small>Herblab</small>
+              </span>
+            </Link>
             <p className="footer__disclaimer">{t('footer.disclaimer')}</p>
           </div>
           <nav aria-label={t('reach.explore')}>

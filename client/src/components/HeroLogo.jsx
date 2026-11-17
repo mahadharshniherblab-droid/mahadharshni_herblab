@@ -40,7 +40,6 @@ export default function HeroLogo() {
         <span className="hero__glare" aria-hidden="true" />
       </button>
       <span className={'hero__bubble' + (hint ? ' is-on' : '')} aria-live="polite">{hint ? '✨ ' + t('tagline') : ''}</span>
-      <span className="hero__hint" aria-hidden="true">👆 {t('fx.logoHint')}</span>
     </div>
   );
 }

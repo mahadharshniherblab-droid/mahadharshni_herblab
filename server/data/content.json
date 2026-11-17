@@ -1,7 +1,7 @@
 {
   "pricing": {},
   "topOffer": {
-    "percent": 20,
+    "percent": 10,
     "mrp": 399
   },
   "herbalData": {},
@@ -436,5 +436,6 @@
       "updatedAt": "2026-11-17T08:20:56.517Z"
     }
   ],
+  "offer": null,
   "offers": []
 }

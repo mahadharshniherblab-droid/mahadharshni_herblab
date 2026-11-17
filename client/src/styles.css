@@ -141,7 +141,7 @@ html[data-theme='dark'] .hero h1 em { color: var(--gold-light); }
 /* Sections */
 .section { padding: 3.5rem 0; }
 .section--tint { background: var(--surface); }
-.section__title { text-align: center; margin-bottom: 2rem; }
+.section__title { text-align: center; margin-bottom: 2rem; font-size: clamp(1.8rem, 4vw, 2.8rem); letter-spacing: -.025em; text-wrap: balance; }
 .section__title::after { content: ''; display: block; width: 70px; height: 3px; background: var(--gold); margin: .6rem auto 0; border-radius: 2px; }
 
 /* Product grid & cards */
@@ -166,6 +166,8 @@ html[data-theme='dark'] .hero h1 em { color: var(--gold-light); }
 /* A packshot taken on a plain white sweep: blend the white into the card so the product sits in the frame. */
 .card__media img.is-blend { mix-blend-mode: multiply; }
 html[data-theme='dark'] .card__media img.is-blend { mix-blend-mode: normal; }
+.pdp__photo.is-blend { mix-blend-mode: multiply; }
+html[data-theme='dark'] .pdp__photo.is-blend { mix-blend-mode: normal; }
 .card__slide video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
 .card__dots { position: absolute; left: 50%; bottom: .6rem; transform: translateX(-50%); display: flex; gap: .4rem; z-index: 5; }
 .card__dots button { width: 7px; height: 7px; border-radius: 50%; border: 0; padding: 0; background: rgba(255,255,255,.6); cursor: pointer; }
@@ -276,6 +278,9 @@ html[data-theme='dark'] .card__media img.is-blend { mix-blend-mode: normal; }
 .footer { background: #20251b; color: #f7f1e6; padding: 3.25rem 0 1.5rem; }
 .footer__inner { display: grid; grid-template-columns: 1.35fr .75fr 1fr; gap: 2rem; }
 .footer__brand { display: inline-flex; align-items: center; gap: .7rem; }
+.footer__brand-text { display: flex; flex-direction: column; line-height: 1.15; text-align: left; }
+.footer__brand-text strong { font-family: var(--font-head); font-size: 1.05rem; color: #f7f1e6; }
+.footer__brand-text small { color: #d2cf9a; letter-spacing: .15em; text-transform: uppercase; font-size: .65rem; font-weight: 600; }
 .footer__disclaimer { color: #c9c8b7; }
 .footer__inner h2 { color: #d2cf9a; font-size: .84rem; letter-spacing: .09em; text-transform: uppercase; margin: 0 0 .9rem; }
 .footer__inner nav a, .footer__channels a { display: block; width: fit-content; margin-block: .45rem; overflow-wrap: anywhere; }
@@ -290,6 +295,18 @@ html[data-theme='dark'] .card__media img.is-blend { mix-blend-mode: normal; }
 @media (max-width: 740px) {
   .footer__inner { grid-template-columns: 1fr; gap: 1.5rem; }
   .reach__instagram { gap: .75rem; }
+  /* Keep the last line of the footer clear of the fixed bottom Call/WhatsApp bar + back-to-top button */
+  .footer { padding-bottom: 6.75rem; }
+  /* Centered, stacked footer layout on phones, like a typical mobile site footer */
+  .footer__inner { text-align: center; justify-items: center; }
+  .footer__inner nav a, .footer__channels a { margin-inline: auto; }
+}
+
+@media (max-width: 600px) {
+  /* Big Call button on its own row, then WhatsApp + Email side by side below it */
+  .reach__buttons { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; width: 100%; max-width: 26rem; margin-inline: auto; }
+  .reach__buttons .btn { width: 100%; }
+  .reach__buttons .btn:first-child { grid-column: 1 / -1; }
 }
 
 /* Intro splash */
@@ -301,15 +318,50 @@ html[data-theme='dark'] .card__media img.is-blend { mix-blend-mode: normal; }
   .about-story__media { min-height: 300px; max-width: 320px; margin: 0 auto 2.5rem; }
   .pdp, .cart, .hero__inner { grid-template-columns: 1fr; }
   .pdp__media, .cart__summary { position: static; }
-  .hero__inner { padding: 2.5rem 0; text-align: center; }
+  .hero__inner { padding: 1rem 0 2rem; text-align: center; }
   .hero p { margin-inline: auto; }
+  /* Logo first, then the headline and copy below it, like a typical mobile landing page */
+  .hero__visual { order: -1; }
+  .hero__text { order: 1; }
+  .hero__eyebrow, .hero__positioning { margin-top: 0; }
+  .hero .hero__positioning { margin-bottom: .9rem; }
+}
+@media (max-width: 650px) {
+  /* Swipeable row of small product cards, like a touch carousel - speed follows the swipe itself */
+  .shop-section .grid {
+    display: flex;
+    grid-template-columns: unset;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: .9rem;
+    padding: .15rem .15rem .4rem;
+    margin: 0 -.15rem;
+  }
+  .shop-section .grid::-webkit-scrollbar { display: none; }
+  .shop-section .grid .card {
+    flex: 0 0 auto;
+    width: 62%;
+    min-width: 13rem;
+    max-width: 15rem;
+    scroll-snap-align: start;
+  }
+  .shop-section .card__body { padding: .85rem .95rem 1rem; gap: .3rem; }
+  .shop-section .card__title { font-size: 1.05rem; }
+  .shop-section .card__type { font-size: .78rem; }
+  .shop-section .card__short { font-size: .8rem; }
+  .shop-section .card__actions { flex-direction: column; gap: .5rem; }
+  .shop-section .card__actions .btn { font-size: .85rem; padding: .55rem .9rem; min-width: 0; width: 100%; white-space: nowrap; }
 }
 @media (max-width: 760px) {
   .menu-btn { display: flex; }
   .nav { position: absolute; top: 100%; left: 0; right: 0; background: var(--surface); flex-direction: column; gap: 0; border-bottom: 1px solid var(--line); display: none; }
   .nav--open { display: flex; }
   .nav a { padding: .9rem 4%; border-bottom: 1px solid var(--line); }
-  .brand__text { display: none; }
+  /* Keep the brand name next to the logo, just smaller, instead of hiding it */
+  .brand__text strong { font-size: .92rem; }
+  .brand__text small { font-size: .58rem; }
 }
 @media (max-width: 560px) {
   .about-story__media { min-height: 220px; max-width: 220px; margin-bottom: 3rem; }
@@ -367,7 +419,7 @@ html[data-theme='dark'] .cart-row img { background: var(--surface); }
 
 .hero__actions { display: flex; flex-wrap: wrap; gap: .75rem; }
 .ingredients { padding-block: clamp(2.75rem, 6vw, 5rem); }
-.ingredients > :is(h1, h2) { margin-bottom: 1em; letter-spacing: -.045em; font-size: clamp(2.35rem, 5vw, 4rem); }
+.ingredients > :is(h1, h2) { margin-bottom: 1em; }
 .ingredient-group + .ingredient-group { margin-top: 3rem; }
 .botanical-detail { padding: 0; border: 0; background: transparent; color: var(--ink); width: min(90vw, 37rem); max-height: 90dvh; border-radius: 1.3rem; }
 .botanical-detail::backdrop { background: #10130de6; }
@@ -383,7 +435,7 @@ html[data-theme='dark'] .cart-row img { background: var(--surface); }
 .slide-controls button:disabled { opacity: .35; cursor: default; }
 .ingredient-spread { padding: clamp(1.4rem, 2.8vw, 2.6rem) 0; border-bottom: 1px solid var(--line); }
 .ingredient-spread.with-intro { display: grid; grid-template-columns: minmax(11rem, .92fr) minmax(0, 3fr); gap: clamp(1rem, 2vw, 2rem); align-items: center; }
-.nature-intro h3 { font: 500 clamp(2rem, 3.2vw, 3rem)/1.04 Georgia, serif; color: var(--ink); margin: 0 0 .6rem; }
+.nature-intro h3 { font: 500 clamp(1.5rem, 2.6vw, 2.3rem)/1.12 Georgia, serif; color: var(--ink); margin: 0 0 .5rem; }
 .nature-intro p, .specimen small { color: var(--muted); line-height: 1.5; }
 .nature-intro p { max-width: 37ch; margin: 0; }
 .specimens { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); align-items: center; gap: clamp(.8rem,1.8vw,1.6rem); list-style: none; padding: 0; margin: 0; }
@@ -404,10 +456,35 @@ html[data-theme='dark'] .cart-row img { background: var(--surface); }
 }
 @media (max-width: 650px) {
   .ingredient-spread.with-intro { grid-template-columns: 1fr; }
-  .specimens, .specimens.five { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 1.2rem; }
-  .specimens li:first-child { grid-column: 1 / -1; }
-  .specimens li:first-child .specimen { grid-template-columns: minmax(5rem,35%) 1fr; align-items: center; }
-  .specimen img { max-height: 10rem; }
+  /* Less dead space between one ingredient group and the next */
+  .ingredient-group + .ingredient-group { margin-top: 1.4rem; }
+  .ingredient-spread { padding: 1rem 0; }
+  /* Swipeable row of small ingredient cards, like a touch carousel - speed follows the swipe itself */
+  .specimens, .specimens.five {
+    display: flex;
+    grid-template-columns: unset;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: .8rem;
+    padding: .15rem .15rem .4rem;
+    margin: 0 -.15rem;
+  }
+  .specimens::-webkit-scrollbar { display: none; }
+  .specimens li {
+    flex: 0 0 auto;
+    width: 40%;
+    min-width: 8.4rem;
+    max-width: 9.5rem;
+    scroll-snap-align: start;
+  }
+  .specimens li:first-child { grid-column: unset; }
+  .specimen { grid-template-columns: 1fr; }
+  .specimens li:first-child .specimen { grid-template-columns: 1fr; align-items: start; }
+  .specimen img { max-height: 7rem; aspect-ratio: 1; }
+  .specimen strong { font-size: .88rem; line-height: 1.2; }
+  .specimen small { font-size: .74rem; margin-top: .25rem; }
 }
 @media (prefers-reduced-motion: no-preference) {
   .ingredient-spread { animation: spread-in .35s ease-out; }
@@ -434,7 +511,7 @@ html[data-theme='dark'] .cart-row img { background: var(--surface); }
 .about-story { text-align: center; background: color-mix(in srgb, var(--surface) 95%, var(--gold)); }
 .about-story__label { display: flex; align-items: center; justify-content: center; gap: .8rem; margin: 0 0 1rem; font-size: .83rem; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; }
 .about-story__label::before, .about-story__label::after { content: ''; width: 2.4rem; height: 1px; background: var(--gold); }
-.about-story .container > :is(h1, h2) { font-size: clamp(2rem, 4vw, 3.5rem); margin: 0; }
+.about-story .container > :is(h1, h2) { margin: 0; }
 .about-story__intro { max-width: 60ch; margin: 1rem auto clamp(1.6rem, 4vw, 3rem); color: var(--muted); }
 
 /* ==========================================================================
@@ -569,7 +646,7 @@ html[data-theme='dark'] .hero h1 em { background-image: linear-gradient(90deg, #
 .hero__bubble.is-on { opacity: 1; transform: scale(1); }
 .hero__hint { position: absolute; left: 50%; bottom: -2.3rem; translate: -50% 0; font-size: .78rem; color: var(--muted); white-space: nowrap; animation: hint-bob 2s ease-in-out infinite; }
 @keyframes hint-bob { 50% { transform: translateY(-4px); } }
-@media (max-width: 980px) { .hero__visual { width: min(76%, 26rem); margin-block: 1.5rem 2.5rem; } }
+@media (max-width: 980px) { .hero__visual { width: min(58%, 14.5rem); margin-block: 0 .25rem; } }
 .logo--pulse { animation: logo-pulse 2.8s ease-in-out infinite; }
 @keyframes logo-pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(154,126,59,.45); } 60% { box-shadow: 0 0 0 16px rgba(154,126,59,0); } }
 .logo--pulse { border-radius: 50%; }
@@ -702,6 +779,16 @@ html[data-theme='dark'] .marquee { background: linear-gradient(90deg, #11150b, #
 .fab__ring circle { fill: none; stroke: var(--line); stroke-width: 3; }
 .fab__ring .fab__ring-fill { stroke: var(--gold); stroke-linecap: round; transition: stroke-dashoffset .15s linear; }
 .toast ~ .fab-stack, body:has(.toast) .fab-stack { bottom: 6rem; }
+@media (max-width: 600px) {
+  /* Smaller, closer-to-the-corner buttons so they cover less of the page on phones */
+  .fab-stack { right: .7rem; bottom: .9rem; gap: .55rem; }
+  .fab { width: 44px; height: 44px; }
+  .fab--top { font-size: 1.05rem; }
+  .toast ~ .fab-stack, body:has(.toast) .fab-stack { bottom: 5.4rem; }
+}
+
+/* Fixed Call / WhatsApp bar at the bottom of the screen on phones, like a typical mobile landing page */
+
 
 /* Respect people who turn animations off */
 @media (prefers-reduced-motion: reduce) {
@@ -807,7 +894,7 @@ html[data-theme='dark'] .admin-menu__title { color: var(--gold-light); }
 .seasonal__inner { display: grid; justify-items: center; text-align: center; gap: .7rem; }
 .seasonal__label { display: inline-flex; align-items: center; gap: .9rem; margin: 0; letter-spacing: .24em; text-transform: uppercase; font-size: .74rem; font-weight: 700; color: var(--gold); }
 .seasonal__label::before, .seasonal__label::after { content: ''; width: 46px; height: 1px; background: currentColor; opacity: .55; }
-.seasonal__title { margin: 0; font-size: clamp(2rem, 4.6vw, 3rem); letter-spacing: -.03em; }
+.seasonal__title { margin: 0; }
 .seasonal__intro { margin: 0; max-width: 640px; color: var(--muted); }
 .seasonal__empty { margin: 1.8rem 0 0; width: min(980px, 100%); border: 1px dashed var(--line); border-radius: var(--radius); padding: 2.4rem 1rem; color: var(--muted); }
 .seasonal__inner .seasonal__card { margin-top: 1.8rem; width: 100%; justify-self: stretch; text-align: left; }
@@ -841,7 +928,34 @@ html[data-theme='dark'] .admin-menu__title { color: var(--gold-light); }
 html[data-theme='dark'] .why-card { background: linear-gradient(160deg, #1d2416, #12170d); }
 html[data-theme='dark'] .why-art__bg { fill: #2c3420; }
 @media (max-width: 1060px) { .why-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 600px) { .why-cards { grid-template-columns: minmax(0, 1fr); } .why-card { padding: 1.5rem 1.35rem; } }
+@media (max-width: 600px) {
+  /* Compact, icon-beside-text rows so all four reasons fit on one page without heavy scrolling */
+  .why-cards { grid-template-columns: minmax(0, 1fr); gap: .8rem; margin-top: 1.3rem; }
+  .why-card {
+    display: grid;
+    grid-template-columns: 52px 1fr;
+    grid-template-areas: "icon title" "icon desc";
+    align-items: center;
+    column-gap: .9rem;
+    row-gap: .15rem;
+    padding: .9rem 1.1rem;
+    text-align: left;
+  }
+  .why-card__num { display: none; }
+  .why-art { grid-area: icon; width: 52px; height: 52px; margin: 0; align-self: center; }
+  .why-card h3 { grid-area: title; font-size: 1.02rem; margin: 0; line-height: 1.3; }
+  .why-card p { grid-area: desc; font-size: .85rem; line-height: 1.4; }
+
+  /* Shrink the longer, multi-line paragraphs on phones so they take up less height */
+  .hero p { font-size: .95rem; line-height: 1.5; }
+  .about-story__intro { font-size: .92rem; line-height: 1.5; }
+  .card__short { font-size: .85rem; line-height: 1.45; }
+  .why__text p { font-size: .85rem; line-height: 1.45; }
+  .pdp__info > p, .pdp__block p, .pdp__block .ticks li { font-size: .92rem; line-height: 1.45; }
+  .footer__disclaimer { font-size: .8rem; line-height: 1.45; }
+  .notice { font-size: .85rem; line-height: 1.4; }
+  .admin-hint, .seasonal__dates { font-size: .85rem; }
+}
 @media (prefers-reduced-motion: reduce) { .why-card, .why-art__sway { transition: none; } .why-card:hover { transform: none; } }
 
 .seasonal__inner .seasonal__card { width: fit-content; max-width: min(100%, 46rem); justify-self: center; grid-template-columns: 1fr; gap: 0; text-align: center; background: var(--surface); }
@@ -866,7 +980,10 @@ html[data-theme='dark'] .why-art__bg { fill: #2c3420; }
   .header__actions { gap: clamp(2px, 1vw, 5px); }
   .header__inner .logo, .header__inner .logo__img { width: 40px; height: 40px; max-width: 40px; max-height: 40px; }
   .header__actions .cart-btn, .header__actions .theme-btn, .header__actions .admin-btn { width: 38px; }
-  .lang-select { max-width: 5rem; padding-inline: .35rem; }
+  .lang-select { max-width: 3.6rem; padding-inline: .3rem; font-size: .78rem; }
+  .brand { gap: .4rem; }
+  .brand__text strong { font-size: .84rem; }
+  .brand__text small { font-size: .54rem; letter-spacing: .1em; }
 }
 
 @media (max-width: 760px) {

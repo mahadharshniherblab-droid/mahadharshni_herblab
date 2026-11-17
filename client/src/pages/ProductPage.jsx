@@ -91,7 +91,7 @@ export default function ProductPage() {
                 onPointerCancel={onDragEnd}
               >
                 <div className="pdp__slide">
-                  <img ref={img} className="pdp__photo" src={imageFor(id, lang)} alt={`${c.name} ${c.type}`} draggable={false} />
+                  <img ref={img} className={'pdp__photo' + (p.cardFit === 'blend' ? ' is-blend' : '')} src={imageFor(id, lang)} alt={`${c.name} ${c.type}`} draggable={false} />
                 </div>
                 {video && (
                   <div className="pdp__slide">

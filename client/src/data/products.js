@@ -94,6 +94,7 @@ export const PRODUCT_CONTENT = {
     slug: 'byewart-gel',
     size: '50 ml',
     images: { en: '/media/byewart.jpg' },
+    cardFit: 'blend',
     accent: '#c62828',
     en: {
       name: 'ByeWart',

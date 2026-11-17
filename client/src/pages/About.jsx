@@ -96,7 +96,7 @@ export default function About({ embedded = false }) {
     <section className="section about-story" id="about">
       <div className="container">
         <p className="about-story__label" data-reveal="">{t('about.title')}</p>
-        <Heading data-reveal="">{t('home.whyTitle')}</Heading>
+        <Heading className="section__title" data-reveal="">{t('home.whyTitle')}</Heading>
         <p className="about-story__intro" data-reveal="">{t('about.body')}</p>
 
         <ol className="why-cards">

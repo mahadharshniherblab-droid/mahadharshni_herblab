@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigationType } from 'react-router-dom';
 import { useLang } from '../context/LangContext.jsx';
 import { PRODUCT_ORDER } from '../data/products.js';
 import { SECTION_ROUTES } from '../lib/sections.js';
@@ -17,6 +17,7 @@ import Contact from './Contact.jsx';
 export default function Home() {
   const { t } = useLang();
   const location = useLocation();
+  const navigationType = useNavigationType();
   const mounted = useRef(false);
   // The two home-page numbers, editable under “Herbal data” in the owner dashboard.
   const herbal = getLoadedContent().herbalData ?? {};
@@ -30,6 +31,9 @@ export default function Home() {
   // Every menu item lands on its section of this one page, so the following sections
   // (Shop → Ingredients → Contact) always come next as you scroll.
   useEffect(() => {
+    // Coming back via the Back button (e.g. from a product page) should land you
+    // right where you were on this page, not jump up to the top of the home hero.
+    if (navigationType === 'POP') { mounted.current = true; return; }
     const id = SECTION_ROUTES[location.pathname] ?? 'home';
     const behavior = mounted.current && !reducedMotion() ? 'smooth' : 'auto';
     mounted.current = true;
@@ -42,7 +46,7 @@ export default function Home() {
     };
     const frame = requestAnimationFrame(go);
     return () => cancelAnimationFrame(frame);
-  }, [location.pathname, location.key]);
+  }, [location.pathname, location.key, navigationType]);
 
   return (
     <>
