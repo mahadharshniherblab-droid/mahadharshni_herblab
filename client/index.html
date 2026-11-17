@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mahadharshni Herblab – Innovation starts here</title>
+    <meta name="description" content="Herbal pain relief roll-on, hair oil and anti-wart gel from Mahadharshni Herblab. 10% off every order." />
+    <meta name="theme-color" content="#F7F1E6" />
+    <link rel="icon" type="image/png" href="/media/logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500;1,600&family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@400;600&family=Noto+Sans+Telugu:wght@400;600&family=Noto+Sans+Devanagari:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <script>
+      // Apply the saved dark/light choice before paint so the page does not flash.
+      try {
+        var savedTheme = localStorage.getItem('mh-theme');
+        document.querySelector('meta[name="theme-color"]').content = savedTheme === 'dark' ? '#000000' : '#F7F1E6';
+        document.documentElement.dataset.theme = savedTheme === 'dark' ? 'dark' : 'light';
+      } catch (e) {}
+    </script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

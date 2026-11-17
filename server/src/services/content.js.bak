@@ -1,0 +1,150 @@
+// Website content saved by the owner from the admin dashboard.
+// Products and ingredients start from the default catalogue (src/config/catalogue.js);
+// as soon as the owner adds, edits or deletes one, the whole list is saved in data/content.json.
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { DEFAULT_CATALOGUE } from '../config/catalogue.js';
+
+const here = path.dirname(fileURLToPath(import.meta.url));
+const DATA_DIR = path.join(here, '..', '..', 'data');
+const FILE = path.join(DATA_DIR, 'content.json');
+
+// Used until the owner sets a product's own price.
+const DEFAULT_PRICE = Number(process.env.REGULAR_PRICE ?? 399);
+const DEFAULT_DISCOUNT = Number(process.env.DISCOUNT_PERCENT ?? 10);
+
+// products/ingredients stay `null` until the owner changes them, so the defaults stay live.
+const EMPTY = { pricing: {}, topOffer: {}, herbalData: {}, products: null, ingredients: null, offer: null };
+
+let cache = null;
+
+async function load() {
+  try {
+    const raw = await fs.readFile(FILE, 'utf8');
+    return { ...EMPTY, ...JSON.parse(raw) };
+  } catch {
+    return { ...EMPTY };
+  }
+}
+
+export async function getContent() {
+  if (!cache) cache = await load();
+  return cache;
+}
+
+async function persist(next) {
+  await fs.mkdir(DATA_DIR, { recursive: true });
+  const tmp = `${FILE}.tmp`;
+  await fs.writeFile(tmp, JSON.stringify(next, null, 2), 'utf8');
+  await fs.rename(tmp, FILE);
+  cache = next;
+  return cache;
+}
+
+/** Applies `mutator` to a copy of the content and saves it. */
+let pendingWrite = Promise.resolve();
+export function updateContent(mutator) {
+  const write = pendingWrite.then(async () => {
+    const next = structuredClone(await getContent());
+    mutator(next);
+    return persist(next);
+  });
+  pendingWrite = write.catch(() => {});
+  return write;
+}
+
+export function offersOf(content) {
+  return content.offers ?? (content.offer ? [{ ...content.offer, id: 'legacy' }] : []);
+}
+
+export function seasonalContent(content) {
+  const offers = offersOf(content).map(withOfferStatus).filter(Boolean);
+  return { offers, offer: offers.find((entry) => entry.active) ?? null };
+}
+
+export const productsOf = (content) =>
+  (Array.isArray(content.products) ? content.products : DEFAULT_CATALOGUE.products)
+    .map(({ discountPercent, offerPrice, ...product }) => product)
+    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+
+// The built-in groups keep their caption ("Hair oil", "Roll-on") even before the owner edits it.
+const DEFAULT_GROUP_LABELS = Object.fromEntries(
+  DEFAULT_CATALOGUE.ingredientGroups.map((group) => [group.key, group.label])
+);
+
+export const ingredientGroupsOf = (content) =>
+  (Array.isArray(content.ingredients) ? content.ingredients : DEFAULT_CATALOGUE.ingredientGroups)
+    .slice()
+    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+    .map((group) => ({ ...group, label: group.label || DEFAULT_GROUP_LABELS[group.key] || '' }));
+
+export const herbalDataOf = (content) => ({ ...DEFAULT_CATALOGUE.herbalData, ...(content.herbalData ?? {}) });
+
+const clampPercent = (value, fallback) => {
+  const number = Number(value);
+  if (!Number.isFinite(number)) return fallback;
+  return Math.min(Math.max(Math.round(number), 0), 90);
+};
+
+/** Price and offer of one product. Each product carries its own numbers. */
+export function productPricing(product, content = {}) {
+  const regular = Number(product?.price ?? content.pricing?.regularPrice ?? DEFAULT_PRICE);
+  const safeRegular = Number.isFinite(regular) && regular >= 1 ? Math.round(regular) : DEFAULT_PRICE;
+  return { regular: safeRegular, currency: 'INR' };
+}
+
+/** The catalogue as the site and the dashboard see it: every product with its own price. */
+export function catalogueView(content) {
+  return productsOf(content).map((product) => {
+    const pricing = productPricing(product, content);
+    return {
+      ...product,
+      price: pricing.regular
+    };
+  });
+}
+
+/** Percentage shown in the strip above the header – a separate line, not a product price. */
+export function topOfferPercent(content) {
+  return clampPercent(content.topOffer?.percent, DEFAULT_DISCOUNT);
+}
+
+/** The strip above the header: its own MRP and percentage, set in the Price tab. */
+export function topOfferView(content) {
+  const percent = topOfferPercent(content);
+  const saved = Math.round(Number(content.topOffer?.mrp));
+  const mrp = Number.isFinite(saved) && saved >= 1 ? saved : cheapestPricing(content).regular;
+  return { percent, mrp, price: mrp - Math.round((mrp * percent) / 100) };
+}
+
+/** The cheapest product; used wherever one price has to stand for the whole shop. */
+export function cheapestPricing(content) {
+  const items = catalogueView(content);
+  if (!items.length) return productPricing({}, content);
+  const cheapest = items.reduce((min, product) => (product.price < min.price ? product : min), items[0]);
+  return {
+    regular: cheapest.price,
+    currency: 'INR'
+  };
+}
+
+/** Kept for the old single-price API shape. */
+export const pricingFor = cheapestPricing;
+
+/** Adds a computed `active` flag so the site knows whether to show the offer today. */
+export function withOfferStatus(offer) {
+  if (!offer?.image) return null;
+  const startOf = (d) => new Date(`${d}T00:00:00`);
+  const endOf = (d) => new Date(`${d}T23:59:59`);
+  const today = new Date();
+  const from = offer.from ? startOf(offer.from) : null;
+  const to = offer.to ? endOf(offer.to) : null;
+  const active = (!from || today >= from) && (!to || today <= to);
+  return { ...offer, active };
+}
+
+export function offerPercent(offer) {
+  const value = Number(offer?.percent);
+  return Number.isFinite(value) && value > 0 && value <= 90 ? Math.round(value) : null;
+}
