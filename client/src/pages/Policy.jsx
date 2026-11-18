@@ -17,10 +17,10 @@ export const policies = [
   ]},
   { slug: 'shipping-policy', title: 'Shipping Policy', sections: [
     ['Shipping within India', 'Free shipping above ₹1,000 | ₹80 shipping below ₹1,000.'],
-    ['Delivery areas', 'We deliver across India and also accept international delivery enquiries. Our online checkout currently accepts Indian addresses and phone numbers. For an international order, contact us before ordering to confirm delivery availability, shipping charges for your destination.'],
+    ['Delivery areas', 'We deliver only within India. International shipping is not available. Please provide an Indian delivery address, a valid PIN code and a reachable phone number.'],
     ['How shipping is calculated', 'Shipping is calculated on the merchandise subtotal after discounts. At exactly ₹1,000, the shipping charge is ₹80. Your checkout summary displays the applicable charge before payment.'],
     ['Delivery address', 'Please provide a complete address, correct PIN code and reachable phone number. Contact us promptly if an address needs correction.'],
-    ['Dispatch and delivery', 'Orders are dispatched within 2 business days after order confirmation. Delivery within India is expected within 7 business days after dispatch. If there is a delay, please contact us with your order reference. International orders are delivered as soon as possible; timing depends on the destination and customs clearance.'],
+    ['Dispatch and delivery', 'Orders are dispatched within 2 business days after order confirmation. Delivery within India is expected within 7 business days after dispatch. If there is a delay, please contact us with your order reference.'],
     ['Delayed or damaged deliveries', 'For a delivery delay, missing parcel or damage, contact us with your order reference and relevant details so we can investigate.']
   ]},
   { slug: 'cancellation-refund-policy', title: 'Cancellation & Refund Policy', sections: [
