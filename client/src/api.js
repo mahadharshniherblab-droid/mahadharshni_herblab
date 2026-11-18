@@ -1,6 +1,6 @@
 // In production set VITE_API_URL to the deployed API (e.g. https://api.mahadharshni.com).
 // In development it is empty and Vite forwards /api to localhost:5000.
-const BASE = import.meta.env.VITE_API_URL ?? '';
+const BASE = (import.meta.env.VITE_API_URL ?? '').trim().replace(/\/+$/, '');
 
 async function request(path, options = {}) {
   const { headers, ...rest } = options;
@@ -8,7 +8,9 @@ async function request(path, options = {}) {
     ...rest,
     headers: { 'Content-Type': 'application/json', ...(headers ?? {}) }
   });
-  const data = await res.json().catch(() => ({}));
+  const data = await res.json().catch(() => {
+    throw new Error('The store server returned an unexpected response. Please try again shortly.');
+  });
   if (!res.ok) {
     // No JSON in the answer means the API itself was unreachable (e.g. the dev proxy could not connect).
     const fallback = data.error ?? (res.status >= 500 ? 'The server did not answer. Please try again.' : 'Request failed');
