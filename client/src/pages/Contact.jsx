@@ -12,6 +12,8 @@ export default function Contact({ embedded = false }) {
         <Logo size={128} className="logo--pulse" />
         <Heading>{t('reach.title')}</Heading>
         <p>{t('reach.intro')}</p>
+        <address className="business-address"><strong>{contact.businessName}</strong><br />{contact.address}</address>
+        <p>Support: {contact.supportHours} · Complaints, feedback and suggestions: <a href={'mailto:' + contact.email}>{contact.email}</a></p>
         <div className="reach__buttons">
           <a className="btn btn--gold" href={'tel:' + contact.phone}>{t('reach.call')} 70101 24244</a>
           <a className="btn btn--ghost" href={contact.whatsapp} target="_blank" rel="noreferrer">{t('reach.whatsapp')}</a>

@@ -1057,3 +1057,10 @@ body:has(.address-dialog[open]) { overflow: hidden; }
     gap: clamp(.7rem, 1.4vw, 1.4rem);
   }
 }
+
+.business-address { font-style: normal; line-height: 1.7; max-width: 40rem; margin: 1rem 0; }
+.reach .business-address { margin-inline: auto; }
+@media (max-width: 650px) {
+  .shop-shipping-line { display: block; }
+  .shop-shipping-divider { display: none; }
+}

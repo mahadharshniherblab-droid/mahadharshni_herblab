@@ -16,17 +16,18 @@ export const policies = [
     ['Order support', 'Our Shipping Policy and Cancellation & Refund Policy explain how to contact us about delivery, cancellation and order issues.']
   ]},
   { slug: 'shipping-policy', title: 'Shipping Policy', sections: [
-    ['Shipping charges', 'Free shipping above ₹1,000 | ₹80 shipping below ₹1,000.'],
+    ['Shipping within India', 'Free shipping above ₹1,000 | ₹80 shipping below ₹1,000.'],
+    ['Delivery areas', 'We deliver across India and also accept international delivery enquiries. Our online checkout currently accepts Indian addresses and phone numbers. For an international order, contact us before ordering to confirm delivery availability, shipping charges for your destination.'],
     ['How shipping is calculated', 'Shipping is calculated on the merchandise subtotal after discounts. At exactly ₹1,000, the shipping charge is ₹80. Your checkout summary displays the applicable charge before payment.'],
     ['Delivery address', 'Please provide a complete address, correct PIN code and reachable phone number. Contact us promptly if an address needs correction.'],
-    ['Dispatch and delivery', 'Contact us before ordering to confirm service availability and the expected dispatch and delivery time for your location. Delivery timing depends on availability, location and the delivery provider.'],
+    ['Dispatch and delivery', 'Orders are dispatched within 2 business days after order confirmation. Delivery within India is expected within 7 business days after dispatch. If there is a delay, please contact us with your order reference. International orders are delivered as soon as possible; timing depends on the destination and customs clearance.'],
     ['Delayed or damaged deliveries', 'For a delivery delay, missing parcel or damage, contact us with your order reference and relevant details so we can investigate.']
   ]},
   { slug: 'cancellation-refund-policy', title: 'Cancellation & Refund Policy', sections: [
-    ['Requesting cancellation', 'Contact us as soon as possible with your order reference to request cancellation. We will check the current order and dispatch status and confirm whether cancellation is possible.'],
-    ['Damaged, incorrect or missing items', 'Contact us promptly with your order reference, a description of the issue and photographs where relevant. Keep the product and packaging while we review the issue.'],
-    ['Returns and eligibility', 'Please contact us before sending a product back. We will confirm the applicable return eligibility, instructions and available resolution for your order. If a return window or condition affects your purchase decision, confirm it with us before ordering.'],
-    ['Refunds', 'If a refund is approved, we will confirm its amount, method and expected processing time directly with you. The time for a credit to appear can depend on the payment provider and bank. Contact us if a confirmed refund has not arrived within the communicated time.']
+    ['Requesting cancellation', 'You may cancel an order before it is dispatched, without cancellation charges. Contact us with your order reference as soon as possible. Once dispatched, an order cannot be cancelled; eligible product issues are handled under the return policy below.'],
+    ['Damaged, leaking or incorrect products', 'Report a damaged, leaking or wrong product within 10 business days after delivery. Attach photographs and your order reference when contacting us. Keep the product and packaging while we review your request.'],
+    ['Returns and eligibility', 'Returns or replacements are accepted for damaged, leaking or wrong products. Change-of-mind returns and opened or used products are not accepted. Always contact us before returning a product so we can confirm eligibility and return instructions.'],
+    ['Refunds', 'Approved refunds are processed within 30 business days of approval to the original payment method. Contact us with your order reference if you need an update on your refund.']
   ]}
 ];
 
@@ -41,7 +42,7 @@ export default function Policy({ slug }) {
       </nav>
       <article className="policy-content">
         {policy.sections.map(([heading, body]) => <section key={heading}><h2>{heading}</h2><p>{body}</p></section>)}
-        <section className="policy-contact"><h2>Contact us</h2><p>For questions about this policy or your order:</p><a href={'mailto:' + contact.email}>{contact.email}</a><br /><a href={'tel:' + contact.phone}>{contact.phoneLabel}</a><p><Link to="/contact">Contact Us</Link> · <Link to="/shop">Product details and pricing</Link></p></section>
+        <section className="policy-contact"><h2>Contact us</h2><p>For complaints, feedback, suggestions or questions about your order, contact us. Support is available {contact.supportHours}.</p><address className="business-address"><strong>{contact.businessName}</strong><br />{contact.address}</address><a href={'mailto:' + contact.email}>{contact.email}</a><br /><a href={'tel:' + contact.phone}>{contact.phoneLabel}</a><p><Link to="/contact">Contact Us</Link> · <Link to="/shop">Product details and pricing</Link></p></section>
       </article>
     </div>
   </section>;
