@@ -10,7 +10,13 @@ import {
 import { adminRouter } from './routes/admin.js';
 
 const app = express();
-app.use(cors({ origin: process.env.CLIENT_ORIGIN?.split(',') ?? true }));
+// A blank CLIENT_ORIGIN (set but empty, e.g. cleared instead of removed in the host's
+// dashboard) must behave the same as "not set" - otherwise cors() tries to match the
+// request's Origin against [''], which never matches anything and silently blocks every
+// cross-origin request with no helpful error.
+const clientOrigin = process.env.CLIENT_ORIGIN?.trim();
+console.log(clientOrigin ? `[cors] allowing origins: ${clientOrigin}` : '[cors] CLIENT_ORIGIN not set - allowing all origins');
+app.use(cors({ origin: clientOrigin ? clientOrigin.split(',').map((s) => s.trim()) : true }));
 app.use(express.json({ limit: '8mb' })); // room for base64 image uploads from the admin dashboard
 
 app.get('/api/health', (_req, res) => res.json({ ok: true, storage: storageMode }));
