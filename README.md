@@ -80,3 +80,18 @@ The production frontend requests `/api/...` from its own origin. `client/public/
 After pushing, wait for a successful Netlify deployment, refresh the phone browser, and verify cart pricing and address submission. A backend outage can still interrupt checkout; the cart has a retry control and request failures retain the address form. No automatic checkout resubmission is performed.
 
 Customer policy pages are linked in the footer. Delivery, cancellation, return and refund timing use contact-based guidance until the business supplies specific terms. Shipping remains ₹80 at exactly ₹1,000 and free above ₹1,000, calculated after discounts.
+
+
+## Persistent admin settings
+
+With Google credentials configured, products, ingredient groups, pricing, top offers, seasonal offers and herbal data are stored in the existing spreadsheet's `WebsiteSettings` tab. Cloudinary retains uploaded images; settings retain their image URLs. Orders, Customers and Enquiries are not changed by this feature.
+
+The tab contains an application-managed JSON snapshot split into Unicode-safe chunks with an integrity checksum. Use the website admin to edit it; do not edit, rename or delete this tab manually. Reads are cached for up to 15 seconds to reduce Sheets quota use. Admin saves refresh the cloud snapshot first and report success only after Sheets accepts the write. A missing/corrupt sheet or API failure never causes a fallback write of old local settings. Production startup requires Google credentials.
+
+### One-time migration
+
+From `server`, run `node scripts/migrate-settings.mjs` **before deploying this version**. It compares local `data/content.json` against the live public catalogue, creates an ignored backup in `server/data/backups/`, creates the settings tab, and verifies the saved snapshot. If a valid settings tab already exists, it does nothing. A different live catalogue, inaccessible sheet, or invalid existing tab stops migration rather than overwriting data.
+
+After migration, restart/deploy the API. `/api/health` reports `contentStorage: "google-sheets"`. Changing the tracked JSON file no longer changes configured sites. Local development with no Google credentials retains file storage; local development using the production sheet edits the SAME live settings. Prefer the live admin for routine changes and a separate sheet for experiments. Writes are serialized within one API process; this is intended for one backend and one active editor, not concurrent independent writers.
+
+Validation: `node --test server/test/settings-store.test.mjs`.

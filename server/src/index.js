@@ -4,7 +4,7 @@ import cors from 'cors';
 import { quoteOrder } from './services/pricing.js';
 import { appendRow, updatePendingOrder, readRows, hasPaidOrder, storageMode } from './services/sheets.js';
 import {
-  getContent, seasonalContent, productsOf, ingredientGroupsOf, herbalDataOf,
+  getContent, contentStorageMode, seasonalContent, productsOf, ingredientGroupsOf, herbalDataOf,
   catalogueView, cheapestPricing, topOfferPercent, topOfferView
 } from './services/content.js';
 import { adminRouter } from './routes/admin.js';
@@ -19,7 +19,7 @@ console.log(clientOrigin ? `[cors] allowing origins: ${clientOrigin}` : '[cors] 
 app.use(cors({ origin: clientOrigin ? clientOrigin.split(',').map((s) => s.trim()) : true }));
 app.use(express.json({ limit: '8mb' })); // room for base64 image uploads from the admin dashboard
 
-app.get('/api/health', (_req, res) => res.json({ ok: true, storage: storageMode }));
+app.get('/api/health', (_req, res) => res.json({ ok: true, storage: storageMode, contentStorage: contentStorageMode }));
 
 app.get('/api/products', async (_req, res, next) => {
   try {

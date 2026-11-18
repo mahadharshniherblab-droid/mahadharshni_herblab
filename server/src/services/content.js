@@ -1,10 +1,12 @@
 // Website content saved by the owner from the admin dashboard.
 // Products and ingredients start from the default catalogue (src/config/catalogue.js);
-// as soon as the owner adds, edits or deletes one, the whole list is saved in data/content.json.
+// Configured sites persist admin changes in Google Sheets; local files are development-only.
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { DEFAULT_CATALOGUE } from '../config/catalogue.js';
+import { storageMode, sheetsClient, SHEET_ID } from './sheets.js';
+import { createSettingsStore } from './settings-store.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = path.join(here, '..', '..', 'data');
@@ -19,6 +21,24 @@ const EMPTY = { pricing: {}, topOffer: {}, herbalData: {}, products: null, ingre
 
 let cache = null;
 let cachedMtime = 0;
+let cloudRead = null;
+let cachedAt = 0;
+const cloud = storageMode === 'google-sheets';
+export const contentStorageMode = cloud ? 'google-sheets' : 'local-file';
+const store = () => createSettingsStore(sheetsClient(), SHEET_ID);
+if (!cloud && (process.env.NODE_ENV === 'production' || process.env.RENDER === 'true')) {
+  throw new Error('Google Sheets credentials are required for production website settings.');
+}
+async function readCloud() {
+  if (!cloudRead) {
+    cloudRead = store().read().then(value => {
+      cache = { ...EMPTY, ...value };
+      cachedAt = Date.now();
+      return cache;
+    }).finally(() => { cloudRead = null; });
+  }
+  return cloudRead;
+}
 
 async function load() {
   try {
@@ -30,6 +50,10 @@ async function load() {
 }
 
 export async function getContent() {
+  if (cloud) {
+    if (cache && Date.now() - cachedAt < 15000) return cache;
+    return readCloud();
+  }
   // The API server and the preview server are separate processes sharing this file,
   // so a save made in one must be picked up by the other. Reload when the file changes.
   try {
@@ -42,6 +66,12 @@ export async function getContent() {
 }
 
 async function persist(next) {
+  if (cloud) {
+    await store().write(next);
+    cache = next;
+    cachedAt = Date.now();
+    return cache;
+  }
   await fs.mkdir(DATA_DIR, { recursive: true });
   const tmp = `${FILE}.tmp`;
   await fs.writeFile(tmp, JSON.stringify(next, null, 2), 'utf8');
@@ -55,7 +85,7 @@ async function persist(next) {
 let pendingWrite = Promise.resolve();
 export function updateContent(mutator) {
   const write = pendingWrite.then(async () => {
-    const next = structuredClone(await getContent());
+    const next = structuredClone(await (cloud ? readCloud() : getContent()));
     mutator(next);
     return persist(next);
   });
