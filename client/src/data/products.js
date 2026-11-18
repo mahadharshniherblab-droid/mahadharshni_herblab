@@ -8,6 +8,7 @@ export const PRODUCT_CONTENT = {
     slug: 'ortho-g',
     size: '50 ml',
     images: { en: '/media/ortho-g-hd.png' },
+    cardImage: '/media/ortho-g-square.jpg',
     accent: '#2e7d32',
     en: {
       name: 'Ortho-G',
@@ -51,6 +52,7 @@ export const PRODUCT_CONTENT = {
     slug: 'keshdharshni-hair-oil',
     size: '100 ml',
     images: { en: '/media/keshdharshni.jpg' },
+    cardImage: '/media/keshdharshni-square.jpg',
     accent: '#7b1e1e',
     en: {
       name: 'Keshdharshni',
@@ -94,6 +96,7 @@ export const PRODUCT_CONTENT = {
     slug: 'byewart-gel',
     size: '50 ml',
     images: { en: '/media/byewart.jpg' },
+    cardImage: '/media/byewart-square.jpg',
     cardFit: 'blend',
     accent: '#c62828',
     en: {
@@ -132,10 +135,55 @@ export const PRODUCT_CONTENT = {
       howToUse: 'जगह को साफ़ करके सुखा लें। सिर्फ़ मस्से या स्किन टैग पर दिन में 2 बार पतली परत लगाएँ।',
       caution: 'केवल बाहरी उपयोग के लिए। आँखों के पास या कटी त्वचा पर न लगाएँ। खून आने, रंग बदलने या तेज़ी से फैलने वाले मस्सों के लिए डॉक्टर से मिलें।'
     }
+  },
+  'byewart-8456': {
+    slug: 'byewart-8456',
+    size: '30ml',
+    images: { en: 'https://res.cloudinary.com/l0pwpmgt/image/upload/v1794903540/mahadharshni-herblab/ukdogxjvpdwlwqe6lbx9.jpg' },
+    cardImage: 'https://res.cloudinary.com/l0pwpmgt/image/upload/c_pad,w_1200,h_1200,b_white/v1794903543/mahadharshni-herblab/fxspy0urxkpvfjueqgkj.jpg',
+    cardFit: 'blend',
+    accent: '#2e7d32',
+    price: 150,
+    en: {
+      name: 'ByeWart',
+      type: 'Oil',
+      tagline: "Nature's Touch, Soothing Relief",
+      short: 'A herbal pain relief roll-on designed for everyday aches and discomfort in joints, back, neck and muscles.',
+      benefits: ['Soothes joint, back and neck discomfort', 'Easy, mess-free roll-on application', 'Herbal formula with a cooling feel', 'Convenient size for home and travel'],
+      howToUse: 'Roll gently over the affected area 2–3 times a day and massage lightly until absorbed. Follow the product label directions.',
+      caution: 'For external use only. Avoid contact with eyes and broken skin. Discontinue use if irritation occurs.'
+    },
+    ta: {
+      name: 'ByeWart',
+      type: 'Oil',
+      tagline: "Nature's Touch, Soothing Relief",
+      short: 'A herbal pain relief roll-on designed for everyday aches and discomfort in joints, back, neck and muscles.',
+      benefits: ['Soothes joint, back and neck discomfort', 'Easy, mess-free roll-on application', 'Herbal formula with a cooling feel', 'Convenient size for home and travel'],
+      howToUse: 'Roll gently over the affected area 2–3 times a day and massage lightly until absorbed. Follow the product label directions.',
+      caution: 'For external use only. Avoid contact with eyes and broken skin. Discontinue use if irritation occurs.'
+    },
+    te: {
+      name: 'బైవార్ట్',
+      type: 'ఆయిల్',
+      tagline: 'నేచర్స్ టచ్, ఓదార్పు ఉపశమనం',
+      short: 'కీళ్ళు, వీపు, మెడ మరియు కండరాలలో రోజువారీ నొప్పులు మరియు అసౌకర్యం కోసం రూపొందించిన మూలికా నొప్పి నివారణ రోల్-ఆన్.',
+      benefits: ['కీళ్ల, వీపు మరియు మెడ అసౌకర్యాన్ని ఉపశమనం చేస్తుంది', 'సులభమైన, గందరగోళం లేని రోల్-ఆన్ అప్లికేషన్', 'శీతలీకరణ అనుభూతితో కూడిన హెర్బల్ ఫార్ములా', 'ఇంటికి మరియు ప్రయాణానికి అనుకూలమైన పరిమాణం'],
+      howToUse: 'ప్రభావిత ప్రాంతంపై రోజుకు 2-3 సార్లు సున్నితంగా రోల్ చేయండి మరియు గ్రహించే వరకు తేలికగా మసాజ్ చేయండి. ఉత్పత్తి లేబుల్ దిశలను అనుసరించండి.',
+      caution: 'బాహ్య వినియోగం కోసం మాత్రమే. కళ్ళు మరియు విరిగిన చర్మంతో సంబంధాన్ని నివారించండి. చికాకు సంభవిస్తే ఉపయోగించడం మానేయండి.'
+    },
+    hi: {
+      name: 'बायवार्ट',
+      type: 'तेल',
+      tagline: 'प्रकृति का स्पर्श, सुखदायक राहत',
+      short: 'जोड़ों, पीठ, गर्दन और मांसपेशियों में रोजमर्रा के दर्द और परेशानी के लिए डिज़ाइन किया गया एक हर्बल दर्द निवारक रोल-ऑन।',
+      benefits: ['जोड़ों, पीठ और गर्दन की परेशानी को शांत करता है', 'आसान, गंदगी मुक्त रोल-ऑन एप्लीकेशन', 'ठंडक के एहसास के साथ हर्बल फॉर्मूला', 'घर और यात्रा के लिए सुविधाजनक आकार'],
+      howToUse: 'प्रभावित क्षेत्र पर दिन में 2-3 बार धीरे से घुमाएँ और अवशोषित होने तक हल्की मालिश करें। उत्पाद लेबल निर्देशों का पालन करें.',
+      caution: 'केवल बाहरी उपयोग के लिए। आंखों और टूटी त्वचा के संपर्क से बचें। यदि जलन हो तो प्रयोग रोक दें।'
+    }
   }
 };
 
-export const PRODUCT_ORDER = ['ortho-g', 'keshdharshni', 'byewart'];
+export const PRODUCT_ORDER = ['ortho-g', 'keshdharshni', 'byewart', 'byewart-8456'];
 
 export function findBySlug(slug) {
   return PRODUCT_ORDER.find((id) => PRODUCT_CONTENT[id].slug === slug || id === slug);

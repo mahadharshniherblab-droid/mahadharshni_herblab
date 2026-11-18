@@ -54,7 +54,12 @@ http.createServer(async (req, res) => {
     if (!file.startsWith(ROOT)) { res.writeHead(403); return res.end(); }
     try { if ((await stat(file)).isDirectory()) file = join(file, 'index.html'); } catch { file = join(ROOT, 'index.html'); } // SPA fallback
     const data = await readFile(file);
-    res.writeHead(200, { 'Content-Type': TYPES[extname(file)] ?? 'application/octet-stream' });
+    const ext = extname(file);
+    // HTML/JS/CSS have no cache-busting filenames, so without this header browsers can
+    // keep showing an old build after a rebuild until the person hard-refreshes.
+    const headers = { 'Content-Type': TYPES[ext] ?? 'application/octet-stream' };
+    if (ext === '.html' || ext === '.js' || ext === '.css') headers['Cache-Control'] = 'no-cache';
+    res.writeHead(200, headers);
     res.end(data);
   } catch (e) { console.error(e); json(res, 500, { error: 'Server error' }); }
 }).listen(PORT, () => console.log(`Mahadharshni Herblab preview running at http://localhost:${PORT}`));

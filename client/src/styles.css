@@ -427,7 +427,7 @@ html[data-theme='dark'] .cart-row img { background: var(--surface); }
 .botanical-detail img { width: 100%; height: min(60dvh, 37rem); object-fit: contain; background: #f4eee1; }
 .botanical-detail form button { z-index: 1; cursor: pointer; font-size: 1.5rem; line-height: 1; }
 @media (max-width: 980px) { .hero__actions { justify-content: center; } }
-.ingredient-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .75rem; padding-bottom: 1rem; border-bottom: 1px solid var(--line); }
+.ingredient-head { display: flex; align-items: center; justify-content: center; text-align: center; flex-wrap: wrap; gap: .75rem; padding-bottom: 1rem; border-bottom: 1px solid var(--line); }
 .ingredient-head h2 { margin: 0; }
 .ingredient-head h2 span { display: inline-block; margin-left: .6em; font: 600 .8rem var(--font-body); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 .slide-controls { display: flex; align-items: center; gap: .75rem; color: var(--muted); font-variant-numeric: tabular-nums; }
@@ -435,9 +435,10 @@ html[data-theme='dark'] .cart-row img { background: var(--surface); }
 .slide-controls button:disabled { opacity: .35; cursor: default; }
 .ingredient-spread { padding: clamp(1.4rem, 2.8vw, 2.6rem) 0; border-bottom: 1px solid var(--line); }
 .ingredient-spread.with-intro { display: grid; grid-template-columns: minmax(11rem, .92fr) minmax(0, 3fr); gap: clamp(1rem, 2vw, 2rem); align-items: center; }
+.nature-intro { text-align: center; }
 .nature-intro h3 { font: 500 clamp(1.5rem, 2.6vw, 2.3rem)/1.12 Georgia, serif; color: var(--ink); margin: 0 0 .5rem; }
 .nature-intro p, .specimen small { color: var(--muted); line-height: 1.5; }
-.nature-intro p { max-width: 37ch; margin: 0; }
+.nature-intro p { max-width: 37ch; margin: 0 auto; }
 .specimens { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); align-items: center; gap: clamp(.8rem,1.8vw,1.6rem); list-style: none; padding: 0; margin: 0; }
 .specimens.five { grid-template-columns: repeat(5,minmax(0,1fr)); }
 .specimen { width: 100%; display: grid; grid-template-columns: 44% 1fr; align-items: center; gap: .7rem; border: 0; background: transparent; color: var(--ink); text-align: start; cursor: zoom-in; padding: 0; }

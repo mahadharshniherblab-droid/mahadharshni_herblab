@@ -43,7 +43,6 @@ export default function WelcomePopup({ ready }) {
         <img className="welcome__logo" src={MEDIA + 'logo.png'} alt="" width="96" height="96" />
         <h2 id="welcome-title">{t('fx.welcomeTitle')}</h2>
         <p>{t('fx.firstOrder')} · {t('fx.offerTitle', { off })}</p>
-        <div className="welcome__price"><strong>₹{topOffer.price}</strong><s>₹{topOffer.mrp}</s></div>
         <div className="welcome__actions">
           <button className="btn btn--gold btn--lg" onClick={grab}>{t('fx.welcomeCta')} →</button>
           <button className="link-btn" onClick={close}>{t('fx.welcomeLater')}</button>
