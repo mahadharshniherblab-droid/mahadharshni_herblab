@@ -15,6 +15,7 @@ export default function Cart() {
   const dialog = useRef(null);
   const edit = checkoutState?.customer;
   const [quoteError, setQuoteError] = useState(false);
+  const [quoteAttempt, setQuoteAttempt] = useState(0);
 
   const [details, setDetails] = useState(edit ?? {});
   const [saving, setSaving] = useState(false);
@@ -25,8 +26,8 @@ export default function Cart() {
     if (saving) return;
     setSaving(true);
     setError('');
-    submission.current ??= crypto.randomUUID();
     try {
+      submission.current ??= crypto.randomUUID();
       const result = await saveCheckout({ orderId: submission.current, customer: details, items: cart });
       navigate('/payment', { state: { ...result, customer: details } });
     } catch (e) { setError(e.message); }
@@ -42,7 +43,7 @@ export default function Cart() {
       .then((q) => { if (!cancelled) setQuote(q); })
       .catch(() => { if (!cancelled) setQuoteError(true); });
     return () => { cancelled = true; };
-  }, [cart]);
+  }, [cart, quoteAttempt]);
 
   useEffect(() => {
     const el = dialog.current;
@@ -89,7 +90,7 @@ export default function Cart() {
                 <div className="cart-row__price">
                   {line ? (
                     <strong>₹{line.lineTotal}</strong>
-                  ) : <span className="muted">{t('cart.loading')}</span>}
+                  ) : <span className="muted">{t(quoteError ? 'cart.unavailable' : 'cart.loading')}</span>}
                   <button className="link-btn" onClick={() => removeFromCart(item.productId)}>{t('cart.remove')}</button>
                 </div>
               </div>
@@ -108,6 +109,7 @@ export default function Cart() {
               <div className="sum-row sum-row--total"><span>{t('cart.total')}</span><span>₹{quote.total}</span></div>
             </>
           ) : <p className="muted">{t(quoteError ? 'cart.unavailable' : 'cart.loading')}</p>}
+          {quoteError && <button className="btn btn--primary" onClick={() => setQuoteAttempt(n => n + 1)}>↻ {({en:'Retry prices',ta:'மீண்டும் முயற்சி',te:'మళ్లీ ప్రయత్నించండి',hi:'फिर कोशिश करें'})[lang]}</button>}
           <Link className="btn btn--gold btn--lg btn--block btn--shine" to="/checkout/address" state={{ fromCart: true }}>
             {t('cart.checkout')}
           </Link>

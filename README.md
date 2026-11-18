@@ -71,3 +71,12 @@ Without Google Sheets keys the API keeps data in memory, which is fine for tryin
 > The logo is a still taken from the intro video for now. Replace `client/public/media/logo.png` with the original logo file (square PNG, transparent background) when you have it.
 
 > Please have a native speaker check the Tamil, Telugu and Hindi text, and confirm the product claims, usage directions and caution notes against your labels and AYUSH licence before launch.
+
+
+## Netlify frontend and Render API
+
+The production frontend requests `/api/...` from its own origin. `client/public/_redirects` proxies those requests to `https://mahadharshni-herblab.onrender.com/api/...` before the SPA fallback. Deploy both the frontend source and `_redirects` together. Production no longer uses `VITE_API_URL`; development still accepts it or uses the local Vite proxy.
+
+After pushing, wait for a successful Netlify deployment, refresh the phone browser, and verify cart pricing and address submission. A backend outage can still interrupt checkout; the cart has a retry control and request failures retain the address form. No automatic checkout resubmission is performed.
+
+Customer policy pages are linked in the footer. Delivery, cancellation, return and refund timing use contact-based guidance until the business supplies specific terms. Shipping remains ₹80 at exactly ₹1,000 and free above ₹1,000, calculated after discounts.

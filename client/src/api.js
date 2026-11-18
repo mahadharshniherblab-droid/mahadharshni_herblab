@@ -1,22 +1,33 @@
-// In production set VITE_API_URL to the deployed API (e.g. https://api.mahadharshni.com).
-// In development it is empty and Vite forwards /api to localhost:5000.
-const BASE = (import.meta.env.VITE_API_URL ?? '').trim().replace(/\/+$/, '');
+// Production uses the Netlify /api proxy; development uses Vite's local proxy.
+const BASE = import.meta.env.PROD ? '' : (import.meta.env.VITE_API_URL ?? '').trim().replace(/\/+$/, '');
 
 async function request(path, options = {}) {
   const { headers, ...rest } = options;
-  const res = await fetch(`${BASE}${path}`, {
-    ...rest,
-    headers: { 'Content-Type': 'application/json', ...(headers ?? {}) }
-  });
-  const data = await res.json().catch(() => {
-    throw new Error('The store server returned an unexpected response. Please try again shortly.');
-  });
-  if (!res.ok) {
-    // No JSON in the answer means the API itself was unreachable (e.g. the dev proxy could not connect).
-    const fallback = data.error ?? (res.status >= 500 ? 'The server did not answer. Please try again.' : 'Request failed');
-    throw Object.assign(new Error(fallback), { data, status: res.status });
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 60000);
+  try {
+    const res = await fetch(`${BASE}${path}`, {
+      ...rest,
+      signal: controller.signal,
+      headers: { 'Content-Type': 'application/json', ...(headers ?? {}) }
+    });
+    const data = await res.json().catch(() => {
+      throw new Error('The store server returned an unexpected response. Please try again shortly.');
+    });
+    if (!res.ok) {
+      // No JSON in the answer means the API itself was unreachable (e.g. the dev proxy could not connect).
+      const fallback = data.error ?? (res.status >= 500 ? 'The server did not answer. Please try again.' : 'Request failed');
+      throw Object.assign(new Error(fallback), { data, status: res.status });
+    }
+    return data;
+  } catch (error) {
+    if (error.name === 'AbortError' || error instanceof TypeError) {
+      throw new Error('Unable to reach the store. Check your connection and try again. Please wait a moment before retrying.');
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeout);
   }
-  return data;
 }
 
 export const fetchCatalogue = () => request('/api/products');

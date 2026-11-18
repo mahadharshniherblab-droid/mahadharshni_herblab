@@ -11,7 +11,7 @@ export const LANGUAGES = [
 export const translations = {
   en: {
     tagline: 'Innovation starts here',
-    shippingPolicy: 'Free delivery on orders over ₹1,000. ₹80 shipping on orders up to ₹1,000.',
+    shippingPolicy: 'Free shipping above ₹1,000 | ₹80 shipping below ₹1,000.',
     closeIngredient: 'Close',
     nature: { title: 'Goodness of Nature', body: 'From hibiscus petals to fenugreek seeds, discover the thirteen herbs that go into Keshdharshni hair oil.', previous: 'Previous slide', next: 'Next slide' },
     ingredientGroups: { hair: 'Hair oil', roll: 'Roll-on' },

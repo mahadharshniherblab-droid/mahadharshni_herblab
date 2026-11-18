@@ -11,6 +11,7 @@ import Admin from './pages/Admin.jsx';
 import ProductPage from './pages/ProductPage.jsx';
 import Payment from './pages/Payment.jsx';
 import Cart from './pages/Cart.jsx';
+import Policy, { policies } from './pages/Policy.jsx';
 import { isSectionRoute } from './lib/sections.js';
 import { startReveal, startRipples } from './lib/effects.js';
 
@@ -59,6 +60,7 @@ export default function App() {
           <Route path="/about" element={<Home />} />
           <Route path="/contact" element={<Home />} />
           <Route path="/product/:slug" element={<ProductPage />} />
+          {policies.map(policy => <Route key={policy.slug} path={'/' + policy.slug} element={<Policy slug={policy.slug} />} />)}
           <Route path="/payment" element={<Payment />} />
           <Route path="/checkout/address" element={<Cart />} />
           <Route path="/cart" element={<Cart />} />

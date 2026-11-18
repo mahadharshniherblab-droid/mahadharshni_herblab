@@ -1005,3 +1005,55 @@ body:has(.address-dialog[open]) { overflow: hidden; }
 .toast__body small { display: block; }
 
 .edit-address-link { display: inline-flex; align-items: center; gap: .4rem; justify-self: start; }
+
+/* Customer information uses the same paper and botanical palette as the store. */
+@media (min-width: 901px) {
+  .footer__inner { grid-template-columns: 1.2fr .85fr 1fr 1fr; }
+}
+.policy-page { max-width: 1100px; }
+.policy-eyebrow { color: var(--muted); letter-spacing: .08em; text-transform: uppercase; font-size: .75rem; }
+.policy-page h1 { font: 500 clamp(2rem, 5vw, 3.5rem)/1.15 Georgia, serif; margin: .6rem 0 2rem; }
+.policy-layout { display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 3rem; align-items: start; }
+.policy-nav { display: grid; gap: .5rem; }
+.policy-nav a { padding: .8rem 1rem; border: 1px solid var(--line); border-radius: .65rem; }
+.policy-nav a[aria-current] { background: var(--ink); color: var(--surface); }
+.policy-content section { margin-bottom: 2rem; }
+.policy-content h2 { font-size: 1.2rem; margin: 0 0 .7rem; }
+.policy-content p { line-height: 1.8; color: var(--muted); }
+.policy-contact { padding: 1.5rem; border: 1px solid var(--line); border-radius: 1rem; overflow-wrap: anywhere; }
+.ingredient-pagination { margin: 0; gap: .5rem; }
+.ingredient-page-number { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: 50%; background: var(--ink); color: var(--surface); }
+@media (min-width: 651px) {
+  .ingredient-head { position: relative; min-height: 3.75rem; padding-inline: 9rem; }
+  .ingredient-pagination { position: absolute; right: 0; top: 0; }
+  .desktop-paged .desktop-hidden { display: none; }
+  .ingredient-spread.with-intro { grid-template-columns: 1fr; gap: 1.8rem; }
+  .nature-intro { max-width: 40rem; margin-inline: auto; }
+  .nature-intro p { max-width: 55ch; }
+  .specimens.desktop-paged.page-0 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .specimens .specimen img { width: clamp(100px, 12vw, 210px); aspect-ratio: .79; object-fit: cover; border-radius: 48% 48% 42% 42%; }
+  .specimen { grid-template-columns: auto minmax(0, 1fr); }
+  .desktop-paged .specimen { grid-template-columns: 1fr; text-align: center; justify-items: center; align-content: start; }
+  .desktop-paged { align-items: start; }
+  .desktop-paged .specimen small { max-width: 28ch; }
+}
+@media (min-width: 651px) and (max-width: 1000px) {
+  .specimen { grid-template-columns: 1fr; }
+  .ingredient-head { justify-content: flex-start; padding-left: 0; text-align: left; }
+}
+@media (max-width: 650px) {
+  .ingredient-pagination { display: none; }
+  .policy-layout { grid-template-columns: 1fr; gap: 1.5rem; }
+  .policy-nav { grid-template-columns: repeat(2, minmax(0, 1fr)); font-size: .85rem; }
+}
+
+/* Only the first desktop ingredient slide uses image-and-text pairs. */
+@media (min-width: 651px) {
+  .desktop-paged.page-0 .specimen {
+    grid-template-columns: auto minmax(0, 1fr);
+    text-align: start;
+    justify-items: stretch;
+    align-items: center;
+    gap: clamp(.7rem, 1.4vw, 1.4rem);
+  }
+}

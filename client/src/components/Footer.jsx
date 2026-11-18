@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { useLang } from '../context/LangContext.jsx';
 import { contact } from '../data/contact.js';
 import Logo from './Logo.jsx';
+import { policies } from '../pages/Policy.jsx';
 
 export default function Footer() {
   const { t } = useLang();
@@ -24,7 +25,11 @@ export default function Footer() {
           <nav aria-label={t('reach.explore')}>
             <h2>{t('reach.explore')}</h2>
             {['shop', 'ingredients', 'about', 'contact'].map(path =>
-              <Link key={path} to={'/' + path}>{t('nav.' + path)}</Link>)}
+              <Link key={path} to={'/' + path}>{path === 'about' ? 'About Us' : path === 'contact' ? 'Contact Us' : path === 'shop' ? 'Product details and pricing' : t('nav.' + path)}</Link>)}
+          </nav>
+          <nav aria-label="Store policies">
+            <h2>Customer care</h2>
+            {policies.map(policy => <Link key={policy.slug} to={'/' + policy.slug}>{policy.title}</Link>)}
           </nav>
           <div className="footer__channels">
             <h2>{t('nav.contact')}</h2>
