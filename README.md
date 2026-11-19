@@ -18,7 +18,7 @@ Online store for **Ortho-G Pain Relief Roll-On (50 ml)**, **Keshdharshni Herbal 
 - About and Contact pages (enquiries are saved to Google Sheets)
 - Language switcher (remembers the choice), mobile-friendly layout
 
-**Coming next:** Phase 3 mobile OTP login + checkout + Razorpay payment; Phase 4 order emails (Resend), admin view, Cloudinary media.
+Razorpay Standard Checkout is integrated with server-side order creation and payment verification. See payment setup below before accepting payments.
 
 ## Run it on your computer
 
@@ -29,7 +29,7 @@ Open two terminals in this folder:
 ```bash
 # Terminal 1 – API
 cd server
-copy .env.example .env      # on Mac/Linux: cp .env.example .env
+copy .env.example .env      # FIRST SETUP ONLY; do not overwrite an existing .env
 npm install
 npm run dev                 # http://localhost:5000
 
@@ -95,3 +95,24 @@ From `server`, run `node scripts/migrate-settings.mjs` **before deploying this v
 After migration, restart/deploy the API. `/api/health` reports `contentStorage: "google-sheets"`. Changing the tracked JSON file no longer changes configured sites. Local development with no Google credentials retains file storage; local development using the production sheet edits the SAME live settings. Prefer the live admin for routine changes and a separate sheet for experiments. Writes are serialized within one API process; this is intended for one backend and one active editor, not concurrent independent writers.
 
 Validation: `node --test server/test/settings-store.test.mjs`.
+
+## Razorpay Standard Checkout
+
+Set `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET` in `server/.env` locally and in **Render → backend → Environment** for deployment. Restart/redeploy the API after changes. Keep the secret on the backend only. The frontend receives the public key ID from the create-order response; no Vite key variable is needed. Environment files are ignored by Git; `.env.example` contains placeholders only.
+
+Use a Razorpay test key pair first. Configure automatic payment capture in the Razorpay dashboard. Only a captured payment with the correct order, amount and currency is recorded as paid. Authorised payments remain pending. Test payments use `TEST_PAID` in the existing Orders sheet, not `PAID`, and must not be fulfilled. They do not affect first-order eligibility.
+
+Flow:
+
+1. The existing address checkout saves the server-priced order and returns its `orderId`.
+2. `POST /api/create-order` with `{ "orderId": "<checkout UUID>" }` creates a Razorpay order using the saved total in paise (minimum 100). Browser-supplied prices are ignored. Response includes `order_id`, `amount`, `currency`, `key_id` and `test_mode`.
+3. The Payment page loads `https://checkout.razorpay.com/v1/checkout.js` and opens Standard Checkout.
+4. `POST /api/verify-payment` accepts `orderId`, `razorpay_order_id`, `razorpay_payment_id` and `razorpay_signature`. It verifies HMAC-SHA256 with the server-stored provider order ID, checks the payment through Razorpay, then updates the existing sheet row. No new database or sheet tab is needed; the provider mapping is stored in `quoteJson`.
+
+Invalid/missing fields or signatures return 400; provider authentication failures return 401; other provider failures return 500; unconfigured credentials return 503; payments awaiting capture return 202. Failed verification never marks an order paid. Address/amount changes are locked once its payment order is created.
+
+To test, start both servers above, add a product, enter delivery details, and click **Pay securely with Razorpay**. Use the test options shown by Razorpay. Check success, modal cancellation and failure; confirm a successful test row says `TEST_PAID`. Use a separate test Google Sheet if you do not want test rows in your business sheet. Automated tests use fake storage and do not write customer data: `node --test server/test/*.test.mjs`. Build the client with `npm --prefix client run build`.
+
+Retries reuse the saved provider order. If a browser callback is lost, **Check payment / retry** checks Razorpay for a captured payment before opening another modal. This integration does not include background webhook reconciliation: if the customer never returns, review the Razorpay dashboard before fulfilment. Writes are serialized within a single backend process, consistent with the existing Sheets storage; do not run independent backend writers against the same sheet.
+
+Deploy both client and server. Keep the existing Netlify API proxy. For real payments, activate your Razorpay account and replace the test pair with a live pair on Render; restart the backend and create a fresh checkout. Never put the secret in Netlify frontend variables, source code, or Git. Rotate keys shared outside your secret storage before production use.

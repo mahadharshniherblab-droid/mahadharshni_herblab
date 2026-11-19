@@ -93,3 +93,9 @@ export const adminUpload = (dataUrl, token) =>
 
 export const saveCheckout = (payload) =>
   request('/api/checkout', { method: 'POST', body: JSON.stringify(payload) });
+
+export const createPaymentOrder = (orderId) =>
+  request('/api/create-order', { method: 'POST', body: JSON.stringify({ orderId }) });
+
+export const verifyPayment = (payload) =>
+  request('/api/verify-payment', { method: 'POST', body: JSON.stringify(payload) });

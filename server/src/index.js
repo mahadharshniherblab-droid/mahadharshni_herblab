@@ -8,6 +8,8 @@ import {
   catalogueView, cheapestPricing, topOfferPercent, topOfferView
 } from './services/content.js';
 import { adminRouter } from './routes/admin.js';
+import { paymentRouter } from './routes/payments.js';
+import { withOrderLock } from './services/order-lock.js';
 
 const app = express();
 // A blank CLIENT_ORIGIN (set but empty, e.g. cleared instead of removed in the host's
@@ -78,7 +80,7 @@ app.post('/api/cart/quote', async (req, res, next) => {
 });
 
 // Serialize pending-order writes so retrying a submission cannot append twice.
-let pendingCheckout = Promise.resolve();
+
 app.post('/api/checkout', async (req, res, next) => {
   try {
     const { items, orderId, customer } = req.body ?? {};
@@ -90,7 +92,7 @@ app.post('/api/checkout', async (req, res, next) => {
     if (Object.values(details).some(v => !v || v.length > 250) || !/^\d{10}$/.test(details.phone) || !/^[1-9]\d{5}$/.test(details.pincode)) {
       return res.status(400).json({ error: 'Check your name, mobile number and delivery address.' });
     }
-    const save = pendingCheckout.then(async () => {
+    const save = withOrderLock(async () => {
       const rows = await readRows('Orders');
       const index = rows.findIndex(r => r.orderId === orderId);
       const previous = rows[index];
@@ -111,7 +113,6 @@ app.post('/api/checkout', async (req, res, next) => {
       else await appendRow('Orders', Object.values(row), row);
       res.status(201).json({ orderId, quote });
     });
-    pendingCheckout = save.catch(() => {});
     await save;
   } catch (e) { next(e); }
 });
@@ -126,6 +127,7 @@ app.post('/api/enquiries', async (req, res, next) => {
   } catch (e) { next(e); }
 });
 
+app.use('/api', paymentRouter);
 app.use('/api/admin', adminRouter);
 
 app.use((err, _req, res, _next) => {

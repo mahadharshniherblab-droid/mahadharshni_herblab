@@ -47,11 +47,13 @@ export async function appendRow(tab, values, asObject) {
   });
 }
 
+const ORDER_COLUMNS = ['orderId', 'phone', 'itemsJson', 'total', 'status', 'paymentId', 'createdAt', 'name', 'pincode', 'house', 'street', 'town', 'city', 'state', 'mrpTotal', 'discountPercent', 'discount', 'shipping', 'paymentMethod', 'requestItems', 'quoteJson'];
+
 export async function updatePendingOrder(index, row) {
   if (!useSheets) { memory.Orders[index] = row; return; }
   await sheetsClient().spreadsheets.values.update({
     spreadsheetId: SHEET_ID, range: `Orders!A${index + 2}:U${index + 2}`,
-    valueInputOption: 'RAW', requestBody: { values: [Object.values(row)] }
+    valueInputOption: 'RAW', requestBody: { values: [ORDER_COLUMNS.map(key => row[key] ?? '')] }
   });
 }
 
