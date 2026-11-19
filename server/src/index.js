@@ -10,6 +10,7 @@ import {
 import { adminRouter } from './routes/admin.js';
 import { paymentRouter } from './routes/payments.js';
 import { withOrderLock } from './services/order-lock.js';
+import { indiaTimestamp } from './services/time.js';
 
 const app = express();
 // A blank CLIENT_ORIGIN (set but empty, e.g. cleared instead of removed in the host's
@@ -103,7 +104,7 @@ app.post('/api/checkout', async (req, res, next) => {
       if (quote.errors.length) return res.status(400).json({ error: quote.errors.join(' ') });
       const row = {
         orderId, phone: details.phone, itemsJson: JSON.stringify(quote.lines), total: quote.total,
-        status: 'PENDING_PAYMENT', paymentId: '', createdAt: previous?.createdAt ?? new Date().toISOString(),
+        status: 'PENDING_PAYMENT', paymentId: '', createdAt: previous?.createdAt ?? indiaTimestamp(),
         name: details.name, pincode: details.pincode, house: details.house, street: details.street,
         town: details.town, city: details.city, state: details.state, mrpTotal: quote.mrpTotal,
         discountPercent: quote.percent, discount: quote.discount, shipping: quote.shipping,
@@ -121,7 +122,7 @@ app.post('/api/enquiries', async (req, res, next) => {
   try {
     const { name, phone, email, message } = req.body ?? {};
     if (!name?.trim() || !message?.trim()) return res.status(400).json({ error: 'Name and message are required' });
-    const row = { name: name.trim(), phone: phone ?? '', email: email ?? '', message: message.trim().slice(0, 2000), createdAt: new Date().toISOString() };
+    const row = { name: name.trim(), phone: phone ?? '', email: email ?? '', message: message.trim().slice(0, 2000), createdAt: indiaTimestamp() };
     await appendRow('Enquiries', Object.values(row), row);
     res.status(201).json({ ok: true });
   } catch (e) { next(e); }

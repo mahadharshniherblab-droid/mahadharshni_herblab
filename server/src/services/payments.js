@@ -1,4 +1,5 @@
 import crypto from 'node:crypto';
+import { indiaTimestamp } from './time.js';
 
 const UUID = /^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i;
 const fail = (status, message) => { throw Object.assign(new Error(message), { status }); };
@@ -42,7 +43,7 @@ export function createPaymentService({ provider, keyId, secret, readOrders, save
     }
     const row = { ...record.row, status: testMode ? 'TEST_PAID' : 'PAID', paymentId: payment.id,
       paymentMethod: testMode ? 'Razorpay Test' : 'Razorpay',
-      quoteJson: JSON.stringify({ ...record.quote, razorpay: { ...stored, capturedAt: new Date().toISOString() } }) };
+      quoteJson: JSON.stringify({ ...record.quote, razorpay: { ...stored, capturedAt: indiaTimestamp() } }) };
     await saveOrder(record.index, row);
     return result({ ...record, row });
   }

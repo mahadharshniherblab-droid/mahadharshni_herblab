@@ -32,10 +32,14 @@ export function quoteCart(items, catalogue = [], percent = 0) {
     if (product.inStock === false) { errors.push(`${product.i18n?.en?.name ?? product.id} is out of stock`); continue; }
 
     const regular = Number(product.price ?? PRICING.regular);
+    const name = (product.i18n?.en?.name ?? product.id).trim();
+    const type = (product.i18n?.en?.type ?? '').trim();
+    // Preserve the product variant in the saved order, even when display names match.
+    const fullName = type && !name.toLowerCase().endsWith(type.toLowerCase()) ? `${name} ${type}` : name;
 
     lines.push({
       productId: product.id,
-      name: product.i18n?.en?.name ?? product.id,
+      name: fullName,
       size: product.size ?? '',
       qty,
       unitRegular: regular,
